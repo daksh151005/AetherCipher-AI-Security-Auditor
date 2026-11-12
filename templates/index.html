@@ -1,0 +1,1926 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AetherCipher | Classical Chaos Image Cryptography</title>
+    <!-- Google Fonts: Inter & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            cyan: '#06b6d4',
+                            violet: '#8b5cf6',
+                            emerald: '#10b981',
+                            amber: '#f59e0b',
+                            rose: '#f43f5e'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        :root {
+            --bg-base: #070a12;
+            --glass-bg: rgba(15, 23, 42, 0.72);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-hover: rgba(255, 255, 255, 0.12);
+        }
+
+        body {
+            background-color: var(--bg-base);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(6, 182, 212, 0.12) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(139, 92, 246, 0.14) 0px, transparent 50%),
+                radial-gradient(at 50% 100%, rgba(16, 185, 129, 0.08) 0px, transparent 50%),
+                linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+            color: #f1f5f9;
+            min-height: 100vh;
+        }
+
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.02);
+        }
+
+        .glass-input {
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #f8fafc;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glass-input:focus {
+            border-color: #06b6d4;
+            box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.25);
+            outline: none;
+        }
+
+        .btn-glow-cyan {
+            background: linear-gradient(135deg, #06b6d4, #0284c7);
+            box-shadow: 0 0 20px -3px rgba(6, 182, 212, 0.4);
+            transition: all 0.25s ease;
+        }
+        .btn-glow-cyan:hover:not(:disabled) {
+            transform: translateY(-1px);
+            box-shadow: 0 0 25px 0px rgba(6, 182, 212, 0.6);
+        }
+
+        .btn-glow-emerald {
+            background: linear-gradient(135deg, #10b981, #059669);
+            box-shadow: 0 0 20px -3px rgba(16, 185, 129, 0.4);
+            transition: all 0.25s ease;
+        }
+        .btn-glow-emerald:hover:not(:disabled) {
+            transform: translateY(-1px);
+            box-shadow: 0 0 25px 0px rgba(16, 185, 129, 0.6);
+        }
+
+        .drop-active {
+            border-color: #06b6d4 !important;
+            background: rgba(6, 182, 212, 0.12) !important;
+            transform: scale(1.01);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #070a12;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #334155;
+        }
+    </style>
+</head>
+<body class="p-3 sm:p-6 lg:p-8 antialiased selection:bg-cyan-500/30 selection:text-cyan-200">
+
+    <!-- Top Navigation Bar -->
+    <header class="max-w-7xl mx-auto mb-8">
+        <div class="glass-panel rounded-2xl px-6 py-4 flex flex-wrap items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-violet-600 flex items-center justify-center shadow-lg shadow-cyan-500/30">
+                    <i data-lucide="shield-check" class="w-5 h-5 text-white"></i>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h1 class="text-xl font-bold tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-400 bg-clip-text text-transparent">
+                            AetherCipher
+                        </h1>
+                        <span class="text-xs px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 font-mono font-medium">
+                            CHAOS-v2.5
+                        </span>
+                    </div>
+                    <p class="text-xs text-slate-400">Classical 2-Stage Chaotic Image Encryption & Batch Decryption Suite</p>
+                </div>
+            </div>
+
+            <!-- Mode Switcher & How It Works -->
+            <div class="flex flex-wrap items-center gap-2 text-xs">
+                <div class="flex p-1 rounded-xl bg-slate-900 border border-slate-800">
+                    <button id="modeSingleBtn" onclick="switchMode('single')" class="px-3 py-1.5 rounded-lg bg-cyan-500/20 text-cyan-300 font-semibold border border-cyan-500/30 transition-all flex items-center gap-1.5">
+                        <i data-lucide="image" class="w-3.5 h-3.5"></i> Single Image
+                    </button>
+                    <button id="modeBatchBtn" onclick="switchMode('batch')" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all flex items-center gap-1.5">
+                        <i data-lucide="folder-archive" class="w-3.5 h-3.5"></i> 📁 Batch Folder (ZIP)
+                    </button>
+                    <button id="modeMlBtn" onclick="switchMode('ml')" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all flex items-center gap-1.5">
+                        <i data-lucide="brain" class="w-3.5 h-3.5 text-violet-400"></i> 🧠 AI Benchmark Hub
+                    </button>
+                </div>
+
+                <button onclick="toggleInfoModal()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800/60 hover:bg-slate-700/60 border border-slate-700/60 text-slate-300 transition-colors">
+                    <i data-lucide="help-circle" class="w-3.5 h-3.5 text-cyan-400"></i>
+                    <span>How it works</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+        <!-- Left Column: Controls & Configuration (4 cols) -->
+        <section class="lg:col-span-4 flex flex-col gap-6">
+
+            <!-- 1. Source Image Upload Panel (Single Mode) -->
+            <div id="singleUploadPanel" class="glass-panel rounded-2xl p-5 relative overflow-hidden">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-300 flex items-center gap-2">
+                        <i data-lucide="upload-cloud" class="w-4 h-4 text-cyan-400"></i>
+                        1. Select Image
+                    </h2>
+                    <button type="button" onclick="loadSampleImage()" class="text-xs px-2.5 py-1 rounded-md bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 transition-colors flex items-center gap-1">
+                        <i data-lucide="sparkles" class="w-3 h-3"></i>
+                        <span>Try Sample</span>
+                    </button>
+                </div>
+
+                <!-- Hidden file input outside dropzone to eliminate bubbling bugs -->
+                <input type="file" id="fileInput" accept="image/*" class="hidden">
+
+                <!-- Drag & Drop Dropzone -->
+                <div id="dropzone" class="border-2 border-dashed border-slate-700 hover:border-cyan-500/60 rounded-xl p-6 text-center cursor-pointer transition-all bg-slate-900/40 hover:bg-slate-900/70 relative group">
+                    <div class="flex flex-col items-center gap-3 pointer-events-none">
+                        <div class="w-12 h-12 rounded-xl bg-slate-800 flex items-center justify-center text-slate-400 group-hover:text-cyan-400 group-hover:scale-110 transition-all">
+                            <i data-lucide="image-plus" class="w-6 h-6"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-slate-200">
+                                Click to choose or drag image here
+                            </p>
+                            <p class="text-xs text-slate-400 mt-1">PNG, JPG, BMP, WebP supported</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Preprocessing Controls -->
+                <div class="mt-4 pt-4 border-t border-slate-800 flex flex-col gap-3">
+                    <div class="flex items-center justify-between text-xs">
+                        <span class="text-slate-300 flex items-center gap-1.5">
+                            <i data-lucide="crop" class="w-3.5 h-3.5 text-cyan-400"></i>
+                            Auto-Crop to Square (NxN)
+                        </span>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="autoCropToggle" checked class="sr-only peer">
+                            <div class="w-9 h-5 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-cyan-500"></div>
+                        </label>
+                    </div>
+
+                    <div class="flex items-center justify-between text-xs">
+                        <span class="text-slate-400">Max Dimension:</span>
+                        <div class="flex items-center gap-1">
+                            <button type="button" onclick="setDimension(256)" class="dim-btn px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-400 border border-slate-700">256px</button>
+                            <button type="button" onclick="setDimension(512)" class="dim-btn px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-semibold">512px</button>
+                            <button type="button" onclick="setDimension(0)" class="dim-btn px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-400 border border-slate-700">Native</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 1. Folder Batch Decrypt Panel (Batch Mode) -->
+            <div id="batchUploadPanel" class="glass-panel rounded-2xl p-5 relative overflow-hidden hidden border-emerald-500/30">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-sm font-semibold uppercase tracking-wider text-emerald-400 flex items-center gap-2">
+                        <i data-lucide="folder-archive" class="w-4 h-4 text-emerald-400"></i>
+                        1. Select Folder of Images
+                    </h2>
+                    <span id="batchCountBadge" class="text-xs px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-300 border border-emerald-500/30 font-mono">0 files</span>
+                </div>
+
+                <!-- Hidden inputs for folder and multi-file selection -->
+                <input type="file" id="folderInput" webkitdirectory directory multiple class="hidden">
+                <input type="file" id="multiFileInput" multiple accept="image/*" class="hidden">
+
+                <!-- Batch Dropzone -->
+                <div id="batchDropzone" class="border-2 border-dashed border-slate-700 hover:border-emerald-500/60 rounded-xl p-6 text-center cursor-pointer transition-all bg-slate-900/40 hover:bg-slate-900/70 relative group">
+                    <div class="flex flex-col items-center gap-3 pointer-events-none">
+                        <div class="w-12 h-12 rounded-xl bg-slate-800 flex items-center justify-center text-slate-400 group-hover:text-emerald-400 group-hover:scale-110 transition-all">
+                            <i data-lucide="folder-up" class="w-6 h-6"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-slate-200">
+                                Click to select Folder of Photos
+                            </p>
+                            <p class="text-xs text-slate-400 mt-1">Or drag multiple encrypted photos here</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Alternative Select Buttons -->
+                <div class="mt-4 pt-4 border-t border-slate-800 grid grid-cols-2 gap-2 text-xs">
+                    <button type="button" onclick="document.getElementById('folderInput').click()" class="py-2 px-3 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 flex items-center justify-center gap-1.5 transition-colors">
+                        <i data-lucide="folder" class="w-3.5 h-3.5 text-emerald-400"></i>
+                        <span>Select Folder...</span>
+                    </button>
+                    <button type="button" onclick="document.getElementById('multiFileInput').click()" class="py-2 px-3 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 flex items-center justify-center gap-1.5 transition-colors">
+                        <i data-lucide="files" class="w-3.5 h-3.5 text-cyan-400"></i>
+                        <span>Select Files...</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 2. Cryptographic Parameters Panel -->
+            <div class="glass-panel rounded-2xl p-5 flex flex-col gap-5">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-300 flex items-center gap-2">
+                        <i data-lucide="key" class="w-4 h-4 text-violet-400"></i>
+                        2. Chaotic Keys
+                    </h2>
+                    <div class="flex items-center gap-1">
+                        <button type="button" onclick="generateRandomKeys()" title="Generate Random Chaotic Keys" class="text-xs px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 flex items-center gap-1 transition-colors">
+                            <i data-lucide="dices" class="w-3.5 h-3.5 text-violet-400"></i>
+                            <span>Random</span>
+                        </button>
+                        <button type="button" onclick="copyParameters()" title="Copy Parameters" class="text-xs px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition-colors">
+                            <i data-lucide="copy" class="w-3.5 h-3.5 text-slate-400"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Presets Pill Bar -->
+                <div class="grid grid-cols-3 gap-1.5 text-[11px]">
+                    <button type="button" onclick="applyPreset(0.5888, 3.98888, 1)" class="preset-btn px-2 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-slate-700 text-center transition-all">
+                        Standard
+                    </button>
+                    <button type="button" onclick="applyPreset(0.2468, 3.9999, 3)" class="preset-btn px-2 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-slate-700 text-center transition-all">
+                        Hyper (3x)
+                    </button>
+                    <button type="button" onclick="applyPreset(0.71828, 4.0, 5)" class="preset-btn px-2 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-slate-700 text-center transition-all">
+                        Deep (5x)
+                    </button>
+                </div>
+
+                <!-- Arnold Cat Map Iterations (k) -->
+                <div class="flex flex-col gap-1.5">
+                    <div class="flex items-center justify-between text-xs">
+                        <label for="iterInput" class="text-slate-300 font-medium flex items-center gap-1.5">
+                            <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+                            Arnold Cat Map Rounds (k)
+                        </label>
+                        <span id="iterBadge" class="font-mono text-cyan-400 font-semibold">1</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <input type="range" id="iterRange" min="1" max="10" step="1" value="1" class="w-full accent-cyan-400 h-1.5 bg-slate-700 rounded-lg cursor-pointer">
+                        <input type="number" id="iterInput" min="1" max="20" value="1" class="glass-input font-mono w-16 text-center text-xs py-1 px-1 rounded-lg">
+                    </div>
+                    <p class="text-[11px] text-slate-400">Number of 2D Toral Automorphism rotations</p>
+                </div>
+
+                <!-- Logistic Map Initial Seed (x) -->
+                <div class="flex flex-col gap-1.5">
+                    <div class="flex items-center justify-between text-xs">
+                        <label for="xInput" class="text-slate-300 font-medium flex items-center gap-1.5">
+                            <span class="w-1.5 h-1.5 rounded-full bg-violet-400"></span>
+                            Logistic Seed (x₀)
+                        </label>
+                        <span class="text-[10px] text-slate-400 font-mono">0 &lt; x₀ &lt; 1</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <input type="range" id="xRange" min="0.0001" max="0.9999" step="0.0001" value="0.5888" class="w-full accent-violet-400 h-1.5 bg-slate-700 rounded-lg cursor-pointer">
+                        <input type="number" id="xInput" step="0.0001" min="0.0001" max="0.9999" value="0.5888" class="glass-input font-mono w-24 text-center text-xs py-1 px-1 rounded-lg">
+                    </div>
+                    <p class="text-[11px] text-slate-400">Initial continuous value for the chaotic orbit</p>
+                </div>
+
+                <!-- Logistic Parameter (r) -->
+                <div class="flex flex-col gap-1.5">
+                    <div class="flex items-center justify-between text-xs">
+                        <label for="rInput" class="text-slate-300 font-medium flex items-center gap-1.5">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                            Chaotic Parameter (r)
+                        </label>
+                        <span class="text-[10px] text-emerald-400 font-mono">Chaos: 3.57 ≤ r ≤ 4.0</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <input type="range" id="rRange" min="3.5700" max="4.0000" step="0.0001" value="3.98888" class="w-full accent-emerald-400 h-1.5 bg-slate-700 rounded-lg cursor-pointer">
+                        <input type="number" id="rInput" step="0.00001" min="3.57" max="4.0" value="3.98888" class="glass-input font-mono w-24 text-center text-xs py-1 px-1 rounded-lg">
+                    </div>
+                    <p class="text-[11px] text-slate-400">Bifurcation parameter controlling Lyapunov exponent</p>
+                </div>
+
+                <!-- Single Mode Action Buttons -->
+                <div id="singleActionButtons" class="pt-2 flex flex-col gap-2.5">
+                    <button type="button" id="encryptBtn" onclick="runEncryption()" disabled class="btn-glow-cyan w-full py-3 px-4 rounded-xl font-semibold text-sm text-white flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed disabled:transform-none">
+                        <i data-lucide="lock" class="w-4 h-4"></i>
+                        <span>Encrypt Image</span>
+                    </button>
+
+                    <button type="button" id="decryptBtn" onclick="runDecryption()" disabled class="btn-glow-emerald w-full py-3 px-4 rounded-xl font-semibold text-sm text-white flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed disabled:transform-none">
+                        <i data-lucide="unlock" class="w-4 h-4"></i>
+                        <span>Decrypt Image</span>
+                    </button>
+                </div>
+
+                <!-- Batch Mode Action Buttons (Both Encrypt and Decrypt!) -->
+                <div id="batchActionButtons" class="pt-2 flex flex-col gap-2.5 hidden">
+                    <button type="button" id="batchEncryptBtn" onclick="runBatchEncrypt()" disabled class="btn-glow-cyan w-full py-3 px-4 rounded-xl font-bold text-sm text-white flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed disabled:transform-none shadow-lg shadow-cyan-500/20">
+                        <i data-lucide="lock" class="w-4 h-4"></i>
+                        <span>🔒 Encrypt All Photos & Get ZIP</span>
+                    </button>
+                    <button type="button" id="batchDecryptBtn" onclick="runBatchDecrypt()" disabled class="btn-glow-emerald w-full py-3 px-4 rounded-xl font-bold text-sm text-white flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed disabled:transform-none shadow-lg shadow-emerald-500/20">
+                        <i data-lucide="unlock" class="w-4 h-4"></i>
+                        <span>🔓 Decrypt All Photos & Get ZIP</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 3. Key Hash Summary -->
+            <div class="glass-panel rounded-2xl p-4 text-xs font-mono text-slate-400 flex items-center justify-between">
+                <span class="flex items-center gap-1.5">
+                    <i data-lucide="hash" class="w-3.5 h-3.5 text-cyan-400"></i>
+                    <span>Cipher State:</span>
+                </span>
+                <span id="cipherStateBadge" class="text-slate-300 font-medium">Idle (Upload required)</span>
+            </div>
+
+        </section>
+
+        <!-- Right Column: Visual Pipeline / Batch Gallery (8 cols) -->
+        <section class="lg:col-span-8 flex flex-col gap-6">
+
+            <!-- SINGLE IMAGE VIEW (3-Cards) -->
+            <div id="singleViewContainer" class="flex flex-col gap-6">
+                <!-- 3-Card Visual Pipeline Display -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+
+                    <!-- Card 1: Input Image -->
+                    <div id="origCard" class="glass-panel rounded-2xl p-4 flex flex-col justify-between group relative overflow-hidden transition-all duration-300">
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <span id="origCardTitle" class="text-xs font-semibold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+                                    <span id="origCardDot" class="w-2 h-2 rounded-full bg-slate-400"></span>
+                                    <span id="origCardLabel">1. Input Image</span>
+                                </span>
+                                <span id="origStatusBadge" class="text-[10px] px-2 py-0.5 rounded bg-slate-800 text-slate-400 font-mono">Empty</span>
+                            </div>
+
+                            <!-- Image Preview Frame -->
+                            <div class="aspect-square w-full rounded-xl bg-slate-900/80 border border-slate-800 flex items-center justify-center overflow-hidden relative group/img">
+                                <img id="origImgPreview" src="" alt="Input Image" class="w-full h-full object-contain hidden">
+                                <div id="origPlaceholder" class="flex flex-col items-center gap-2 text-slate-500 text-xs text-center p-4">
+                                    <i data-lucide="image" class="w-8 h-8 opacity-40"></i>
+                                    <span>No image selected</span>
+                                </div>
+                                <!-- Hover zoom button -->
+                                <button id="origZoomBtn" onclick="openLightbox('origImgPreview', 'Input Image')" class="absolute inset-0 bg-slate-950/60 backdrop-blur-sm opacity-0 group-hover/img:opacity-100 flex items-center justify-center transition-opacity text-white text-xs font-medium gap-1.5 hidden">
+                                    <i data-lucide="maximize-2" class="w-4 h-4"></i> View Full
+                                </button>
+                            </div>
+
+                            <!-- Quick Decrypt Action Button -->
+                            <button id="quickDecryptBtn" onclick="runDecryption()" class="mt-3 w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white font-semibold text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/30 transition-all hidden animate-pulse">
+                                <i data-lucide="unlock" class="w-4 h-4"></i>
+                                <span>⚡ Decrypt This Image Now</span>
+                            </button>
+                        </div>
+
+                        <!-- Card Footer Metrics -->
+                        <div class="mt-4 pt-3 border-t border-slate-800/80 text-xs flex flex-col gap-1.5">
+                            <div class="flex justify-between text-slate-400">
+                                <span>Dimensions:</span>
+                                <span id="origDim" class="font-mono text-slate-200">-</span>
+                            </div>
+                            <div class="flex justify-between text-slate-400">
+                                <span>Entropy (H):</span>
+                                <span id="origEntropy" class="font-mono text-slate-200">-</span>
+                            </div>
+                            <div class="flex justify-between text-slate-400">
+                                <span>Horizontal Corr (r):</span>
+                                <span id="origCorr" class="font-mono text-slate-200">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: Ciphertext (Encrypted) -->
+                    <div class="glass-panel rounded-2xl p-4 flex flex-col justify-between group relative overflow-hidden border-cyan-500/20">
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-xs font-semibold uppercase tracking-wider text-cyan-400 flex items-center gap-1.5">
+                                    <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+                                    2. Ciphertext
+                                </span>
+                                <span id="encStatusBadge" class="text-[10px] px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 font-mono">Awaiting</span>
+                            </div>
+
+                            <!-- Image Preview Frame -->
+                            <div class="aspect-square w-full rounded-xl bg-slate-900/80 border border-slate-800 flex items-center justify-center overflow-hidden relative group/img">
+                                <div id="encSpinner" class="absolute inset-0 bg-slate-950/80 backdrop-blur-sm flex flex-col items-center justify-center gap-2 text-cyan-400 text-xs hidden z-10">
+                                    <i data-lucide="loader-2" class="w-8 h-8 animate-spin"></i>
+                                    <span>Permuting Chaos...</span>
+                                </div>
+                                <img id="encImgPreview" src="" alt="Encrypted Image" class="w-full h-full object-contain hidden">
+                                <div id="encPlaceholder" class="flex flex-col items-center gap-2 text-slate-500 text-xs text-center p-4">
+                                    <i data-lucide="lock" class="w-8 h-8 opacity-40"></i>
+                                    <span>Encrypted noise preview</span>
+                                </div>
+                                <!-- Hover zoom button -->
+                                <button id="encZoomBtn" onclick="openLightbox('encImgPreview', 'Ciphertext Noise')" class="absolute inset-0 bg-slate-950/60 backdrop-blur-sm opacity-0 group-hover/img:opacity-100 flex items-center justify-center transition-opacity text-white text-xs font-medium gap-1.5 hidden">
+                                    <i data-lucide="maximize-2" class="w-4 h-4"></i> View Full
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Card Footer Metrics -->
+                        <div class="mt-4 pt-3 border-t border-slate-800/80 text-xs flex flex-col gap-1.5">
+                            <div class="flex justify-between text-slate-400">
+                                <span>Processing Time:</span>
+                                <span id="encTime" class="font-mono text-cyan-300">-</span>
+                            </div>
+                            <div class="flex justify-between text-slate-400">
+                                <span>Entropy (H):</span>
+                                <span id="encEntropy" class="font-mono text-cyan-300">-</span>
+                            </div>
+                            <div class="flex justify-between text-slate-400">
+                                <span>Horizontal Corr (r):</span>
+                                <span id="encCorr" class="font-mono text-cyan-300">-</span>
+                            </div>
+                            <a id="encDownloadLink" href="#" download class="mt-1 w-full py-1.5 rounded-lg bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 text-center font-medium text-xs flex items-center justify-center gap-1.5 transition-colors hidden">
+                                <i data-lucide="download" class="w-3.5 h-3.5"></i> Download PNG
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Card 3: Restored Plaintext (Decrypted) -->
+                    <div id="decCard" class="glass-panel rounded-2xl p-4 flex flex-col justify-between group relative overflow-hidden border-emerald-500/30 transition-all duration-300">
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-xs font-semibold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
+                                    <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                                    3. Decrypted Output
+                                </span>
+                                <span id="decStatusBadge" class="text-[10px] px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-mono">Awaiting</span>
+                            </div>
+
+                            <!-- Image Preview Frame -->
+                            <div class="aspect-square w-full rounded-xl bg-slate-900/80 border border-slate-800 flex items-center justify-center overflow-hidden relative group/img">
+                                <div id="decSpinner" class="absolute inset-0 bg-slate-950/80 backdrop-blur-sm flex flex-col items-center justify-center gap-2 text-emerald-400 text-xs hidden z-10">
+                                    <i data-lucide="loader-2" class="w-8 h-8 animate-spin"></i>
+                                    <span>Reversing Map...</span>
+                                </div>
+                                <img id="decImgPreview" src="" alt="Decrypted Image" class="w-full h-full object-contain hidden">
+                                <div id="decPlaceholder" class="flex flex-col items-center gap-2 text-slate-500 text-xs text-center p-4">
+                                    <i data-lucide="unlock" class="w-8 h-8 opacity-40"></i>
+                                    <span>Decrypted recovery preview</span>
+                                </div>
+                                <!-- Hover zoom button -->
+                                <button id="decZoomBtn" onclick="openLightbox('decImgPreview', 'Decrypted Image')" class="absolute inset-0 bg-slate-950/60 backdrop-blur-sm opacity-0 group-hover/img:opacity-100 flex items-center justify-center transition-opacity text-white text-xs font-medium gap-1.5 hidden">
+                                    <i data-lucide="maximize-2" class="w-4 h-4"></i> View Full
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Card Footer Metrics -->
+                        <div class="mt-4 pt-3 border-t border-slate-800/80 text-xs flex flex-col gap-1.5">
+                            <div class="flex justify-between text-slate-400">
+                                <span>Processing Time:</span>
+                                <span id="decTime" class="font-mono text-emerald-300">-</span>
+                            </div>
+                            <div class="flex justify-between text-slate-400">
+                                <span>Integrity Match:</span>
+                                <span id="decIntegrity" class="font-mono text-emerald-300">-</span>
+                            </div>
+                            <div class="flex justify-between text-slate-400">
+                                <span>PSNR / MSE:</span>
+                                <span id="decPsnr" class="font-mono text-emerald-300">-</span>
+                            </div>
+                            <a id="decDownloadLink" href="#" download class="mt-1 w-full py-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-center font-medium text-xs flex items-center justify-center gap-1.5 transition-colors hidden">
+                                <i data-lucide="download" class="w-3.5 h-3.5"></i> Download PNG
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Real-Time AI Cryptographic Security Auditor Card -->
+                <div class="glass-panel rounded-2xl p-6 flex flex-col gap-5 border border-violet-500/30 relative overflow-hidden">
+                    <div class="flex items-center justify-between flex-wrap gap-3">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-violet-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-violet-500/30 shrink-0">
+                                <i data-lucide="brain" class="w-5 h-5 text-white"></i>
+                            </div>
+                            <div>
+                                <div class="flex items-center gap-2">
+                                    <h3 class="text-base font-semibold text-white">AI Cryptographic Security Auditor</h3>
+                                    <span class="text-[10px] px-2 py-0.5 rounded-full bg-violet-500/10 text-violet-300 border border-violet-500/30 font-mono font-medium">ML Model: HistGradientBoosting (98.3% Acc)</span>
+                                </div>
+                                <p class="text-xs text-slate-400 mt-0.5">Machine Learning model evaluating diffusion, correlation, and entropy vulnerability</p>
+                            </div>
+                        </div>
+                        <div id="aiVerdictPill" class="px-3.5 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700 text-xs font-semibold text-slate-300 flex items-center gap-2">
+                            <span id="aiVerdictDot" class="w-2.5 h-2.5 rounded-full bg-slate-500"></span>
+                            <span id="aiVerdictText">Awaiting Image</span>
+                        </div>
+                    </div>
+
+                    <!-- AI Probability & Risk Breakdown Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="bg-slate-900/70 border border-slate-800/80 rounded-xl p-4 flex flex-col justify-between">
+                            <div class="flex items-center justify-between text-xs text-slate-400 mb-1">
+                                <span>AI Classification</span>
+                                <i data-lucide="shield-alert" class="w-4 h-4 text-violet-400"></i>
+                            </div>
+                            <div id="aiClassName" class="text-base font-bold text-slate-200 font-mono mt-1">Awaiting Image</div>
+                            <div id="aiRiskText" class="text-[11px] text-slate-400 mt-2 font-medium">Vulnerability: Not Analyzed</div>
+                        </div>
+
+                        <div class="bg-slate-900/70 border border-slate-800/80 rounded-xl p-4 flex flex-col justify-between">
+                            <div class="flex items-center justify-between text-xs text-slate-400 mb-1">
+                                <span>Model Confidence</span>
+                                <i data-lucide="gauge" class="w-4 h-4 text-cyan-400"></i>
+                            </div>
+                            <div class="flex items-baseline gap-2 mt-1">
+                                <span id="aiConfidencePct" class="text-2xl font-bold font-mono text-cyan-400">--%</span>
+                            </div>
+                            <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden mt-3">
+                                <div id="aiConfidenceBar" class="bg-cyan-400 h-full w-0 transition-all duration-500"></div>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-900/70 border border-slate-800/80 rounded-xl p-4 flex flex-col justify-between">
+                            <div class="flex items-center justify-between text-xs text-slate-400 mb-2">
+                                <span>Multi-Class Probabilities</span>
+                                <i data-lucide="layers" class="w-4 h-4 text-emerald-400"></i>
+                            </div>
+                            <div class="space-y-1.5 text-[11px] font-mono">
+                                <div class="flex justify-between items-center text-rose-300">
+                                    <span>Plaintext:</span>
+                                    <span id="aiProbPlain">0.0%</span>
+                                </div>
+                                <div class="flex justify-between items-center text-amber-300">
+                                    <span>Weak (Arnold Only):</span>
+                                    <span id="aiProbWeak">0.0%</span>
+                                </div>
+                                <div class="flex justify-between items-center text-emerald-300">
+                                    <span>Strong (Chaos):</span>
+                                    <span id="aiProbStrong">0.0%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cryptographic Analysis & Metrics Section -->
+                <div class="glass-panel rounded-2xl p-6 flex flex-col gap-5">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="text-base font-semibold text-white flex items-center gap-2">
+                                <i data-lucide="activity" class="w-5 h-5 text-cyan-400"></i>
+                                Cryptanalysis & Security Telemetry
+                            </h3>
+                            <p class="text-xs text-slate-400 mt-0.5">Statistical evaluation of spatial decorrelation and diffusion efficiency</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs px-2.5 py-1 rounded-full bg-slate-800 border border-slate-700 text-slate-300 flex items-center gap-1 font-mono">
+                                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                                Zero Loss Guaranteed
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Metrics Grid -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+
+                        <!-- Metric 1: Adjacent Pixel Correlation -->
+                        <div class="bg-slate-900/60 border border-slate-800/80 rounded-xl p-4 flex flex-col justify-between">
+                            <div class="flex items-center justify-between text-xs text-slate-400 mb-2">
+                                <span>Adjacent Pixel Correlation (r_xy)</span>
+                                <i data-lucide="bar-chart-2" class="w-4 h-4 text-cyan-400"></i>
+                            </div>
+                            <div class="flex items-baseline gap-2">
+                                <span id="metricCorrEnc" class="text-2xl font-bold font-mono text-white">--</span>
+                                <span class="text-xs text-slate-400">enc vs <span id="metricCorrOrig" class="text-slate-300">--</span> orig</span>
+                            </div>
+                            <div class="mt-3">
+                                <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                                    <div id="corrBar" class="bg-cyan-400 h-full w-0 transition-all duration-500"></div>
+                                </div>
+                                <p class="text-[10px] text-slate-400 mt-1">Goal: r ≈ 0.00 (Zero spatial correlation)</p>
+                            </div>
+                        </div>
+
+                        <!-- Metric 2: Shannon Information Entropy -->
+                        <div class="bg-slate-900/60 border border-slate-800/80 rounded-xl p-4 flex flex-col justify-between">
+                            <div class="flex items-center justify-between text-xs text-slate-400 mb-2">
+                                <span>Shannon Entropy (H)</span>
+                                <i data-lucide="fingerprint" class="w-4 h-4 text-violet-400"></i>
+                            </div>
+                            <div class="flex items-baseline gap-2">
+                                <span id="metricEntropyEnc" class="text-2xl font-bold font-mono text-white">--</span>
+                                <span class="text-xs text-slate-400">/ 8.000 bits</span>
+                            </div>
+                            <div class="mt-3">
+                                <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                                    <div id="entropyBar" class="bg-violet-400 h-full w-0 transition-all duration-500"></div>
+                                </div>
+                                <p class="text-[10px] text-slate-400 mt-1">Goal: H close to 8 bits/symbol</p>
+                            </div>
+                        </div>
+
+                        <!-- Metric 3: Roundtrip Integrity & PSNR -->
+                        <div class="bg-slate-900/60 border border-slate-800/80 rounded-xl p-4 flex flex-col justify-between">
+                            <div class="flex items-center justify-between text-xs text-slate-400 mb-2">
+                                <span>Bitwise Reversibility</span>
+                                <i data-lucide="check-check" class="w-4 h-4 text-emerald-400"></i>
+                            </div>
+                            <div class="flex items-baseline gap-2">
+                                <span id="metricIntegrity" class="text-2xl font-bold font-mono text-emerald-400">--</span>
+                            </div>
+                            <div class="mt-3">
+                                <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                                    <div id="integrityBar" class="bg-emerald-400 h-full w-0 transition-all duration-500"></div>
+                                </div>
+                                <p class="text-[10px] text-slate-400 mt-1">PSNR: <span id="metricPsnr" class="font-mono text-slate-300">--</span> (Lossless)</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- BATCH FOLDER DECRYPT VIEW -->
+            <div id="batchViewContainer" class="flex flex-col gap-6 hidden">
+                <div class="glass-panel rounded-2xl p-6 flex flex-col gap-5">
+                    <div class="flex flex-wrap items-center justify-between gap-4">
+                        <div>
+                            <h3 class="text-base font-semibold text-white flex items-center gap-2">
+                                <i data-lucide="folder-archive" class="w-5 h-5 text-emerald-400"></i>
+                                Batch Folder Processing Hub
+                            </h3>
+                            <p class="text-xs text-slate-400 mt-0.5">Encrypt or Decrypt hundreds of images simultaneously into a single downloadable ZIP archive</p>
+                        </div>
+
+                        <!-- Download ZIP Banner -->
+                        <a id="batchZipDownloadLink" href="#" download class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white font-bold text-xs flex items-center gap-2 shadow-lg shadow-emerald-500/30 transition-all hidden">
+                            <i data-lucide="download-cloud" class="w-4 h-4"></i>
+                            <span>Download Processed ZIP Bundle</span>
+                        </a>
+                    </div>
+
+                    <!-- Batch Status and Summary Card -->
+                    <div id="batchProgressBox" class="bg-slate-900/60 border border-slate-800 rounded-xl p-5 flex flex-col gap-3">
+                        <div class="flex items-center justify-between text-xs font-mono">
+                            <span id="batchProgressText" class="text-slate-300">Awaiting folder selection...</span>
+                            <span id="batchTimeText" class="text-emerald-400"></span>
+                        </div>
+                        <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                            <div id="batchProgressBar" class="bg-gradient-to-r from-emerald-500 to-teal-400 h-full w-0 transition-all duration-300"></div>
+                        </div>
+                    </div>
+
+                    <!-- Batch Decrypted Images Gallery -->
+                    <div>
+                        <h4 class="text-xs font-semibold uppercase tracking-wider text-slate-300 mb-3 flex items-center gap-2">
+                            <i data-lucide="layout-grid" class="w-4 h-4 text-emerald-400"></i>
+                            Processed Images Gallery
+                        </h4>
+                        <div id="batchGallery" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 max-h-[500px] overflow-y-auto p-1">
+                            <div class="col-span-full py-12 text-center text-slate-500 text-xs">
+                                <i data-lucide="images" class="w-10 h-10 mx-auto mb-2 opacity-30"></i>
+                                <span>No batch processed yet. Select a folder to begin.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ML BENCHMARK & CRYPTANALYSIS HUB VIEW -->
+            <div id="mlBenchmarkContainer" class="flex flex-col gap-6 hidden">
+                <div class="glass-panel rounded-2xl p-6 flex flex-col gap-6 border border-violet-500/30">
+                    <div class="flex flex-wrap items-center justify-between gap-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-violet-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-violet-500/30 shrink-0">
+                                <i data-lucide="cpu" class="w-6 h-6 text-white"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                                    AI Steganalysis & Cryptographic Benchmark Hub
+                                    <span class="text-xs px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-300 border border-emerald-500/30 font-mono font-medium">98.33% Accuracy</span>
+                                </h3>
+                                <p class="text-xs text-slate-400 mt-0.5">Machine Learning evaluation pipeline trained on 1,200 cryptographic samples with 5-Fold Stratified Cross-Validation</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Top KPI Summary Cards -->
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+                        <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-3.5 flex flex-col justify-between">
+                            <span class="text-slate-400 font-medium">Holdout Test Accuracy</span>
+                            <span class="text-2xl font-bold font-mono text-emerald-400 mt-1">98.33%</span>
+                            <span class="text-[10px] text-slate-500 font-mono">95% CI: [96.67%, 99.58%]</span>
+                        </div>
+                        <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-3.5 flex flex-col justify-between">
+                            <span class="text-slate-400 font-medium">5-Fold CV Accuracy</span>
+                            <span class="text-2xl font-bold font-mono text-cyan-400 mt-1">97.19%</span>
+                            <span class="text-[10px] text-slate-500 font-mono">Standard Dev: ±0.78%</span>
+                        </div>
+                        <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-3.5 flex flex-col justify-between">
+                            <span class="text-slate-400 font-medium">Macro ROC-AUC</span>
+                            <span class="text-2xl font-bold font-mono text-violet-400 mt-1">0.9941</span>
+                            <span class="text-[10px] text-slate-500 font-mono">Macro F1: 0.9833</span>
+                        </div>
+                        <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-3.5 flex flex-col justify-between">
+                            <span class="text-slate-400 font-medium">Inference Latency</span>
+                            <span class="text-2xl font-bold font-mono text-amber-400 mt-1">17.08 µs</span>
+                            <span class="text-[10px] text-slate-500 font-mono">Real-time per image</span>
+                        </div>
+                    </div>
+
+                    <!-- Model Comparison Benchmark Table -->
+                    <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-4 overflow-x-auto">
+                        <h4 class="text-xs font-semibold uppercase tracking-wider text-slate-300 mb-3 flex items-center gap-2">
+                            <i data-lucide="table" class="w-4 h-4 text-cyan-400"></i>
+                            Comprehensive Machine Learning Model Comparison
+                        </h4>
+                        <table class="w-full text-left text-xs font-mono">
+                            <thead class="text-slate-400 border-b border-slate-800 text-[11px]">
+                                <tr>
+                                    <th class="py-2 px-3">Model Architecture</th>
+                                    <th class="py-2 px-3">5-Fold CV Acc</th>
+                                    <th class="py-2 px-3">Test Acc</th>
+                                    <th class="py-2 px-3">Macro F1</th>
+                                    <th class="py-2 px-3">ROC-AUC</th>
+                                    <th class="py-2 px-3">95% Conf Interval</th>
+                                    <th class="py-2 px-3">Latency</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-800/60 text-slate-300">
+                                <tr class="text-slate-500">
+                                    <td class="py-2.5 px-3 font-sans font-medium">Naive Majority Baseline</td>
+                                    <td class="py-2.5 px-3">33.33% ± 0.00%</td>
+                                    <td class="py-2.5 px-3">33.33%</td>
+                                    <td class="py-2.5 px-3">0.1667</td>
+                                    <td class="py-2.5 px-3">0.5000</td>
+                                    <td class="py-2.5 px-3">[33.33%, 33.33%]</td>
+                                    <td class="py-2.5 px-3">0.05 µs</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-2.5 px-3 font-sans font-medium text-slate-200">Logistic Regression (Linear)</td>
+                                    <td class="py-2.5 px-3">93.23% ± 1.09%</td>
+                                    <td class="py-2.5 px-3">95.00%</td>
+                                    <td class="py-2.5 px-3">0.9492</td>
+                                    <td class="py-2.5 px-3">0.9856</td>
+                                    <td class="py-2.5 px-3">[92.08%, 97.50%]</td>
+                                    <td class="py-2.5 px-3">0.15 µs</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-2.5 px-3 font-sans font-medium text-slate-200">Support Vector Classifier (RBF)</td>
+                                    <td class="py-2.5 px-3">92.29% ± 0.39%</td>
+                                    <td class="py-2.5 px-3">91.25%</td>
+                                    <td class="py-2.5 px-3">0.9096</td>
+                                    <td class="py-2.5 px-3">0.9781</td>
+                                    <td class="py-2.5 px-3">[87.92%, 94.58%]</td>
+                                    <td class="py-2.5 px-3">9.31 µs</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-2.5 px-3 font-sans font-medium text-slate-200">Random Forest (100 Trees)</td>
+                                    <td class="py-2.5 px-3">96.35% ± 0.57%</td>
+                                    <td class="py-2.5 px-3 text-emerald-400 font-bold">97.92%</td>
+                                    <td class="py-2.5 px-3">0.9792</td>
+                                    <td class="py-2.5 px-3">0.9984</td>
+                                    <td class="py-2.5 px-3">[95.83%, 99.58%]</td>
+                                    <td class="py-2.5 px-3">8.30 µs</td>
+                                </tr>
+                                <tr class="bg-emerald-500/10 font-bold text-emerald-300">
+                                    <td class="py-2.5 px-3 font-sans flex items-center gap-1.5">
+                                        <i data-lucide="crown" class="w-3.5 h-3.5 text-amber-400"></i>
+                                        <span>Hist Gradient Boosting (Champion)</span>
+                                    </td>
+                                    <td class="py-2.5 px-3">97.19% ± 0.78%</td>
+                                    <td class="py-2.5 px-3 text-emerald-400">98.33%</td>
+                                    <td class="py-2.5 px-3">0.9833</td>
+                                    <td class="py-2.5 px-3">0.9941</td>
+                                    <td class="py-2.5 px-3">[96.67%, 99.58%]</td>
+                                    <td class="py-2.5 px-3">17.08 µs</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Diagnostic Plots Gallery with Tabs -->
+                    <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-5 flex flex-col gap-4">
+                        <div class="flex flex-wrap items-center justify-between gap-3">
+                            <h4 class="text-xs font-semibold uppercase tracking-wider text-slate-300 flex items-center gap-2">
+                                <i data-lucide="bar-chart-3" class="w-4 h-4 text-violet-400"></i>
+                                ML Diagnostic Visualizations & Interpretability
+                            </h4>
+                            <!-- Plot Switcher Tabs -->
+                            <div class="flex p-1 rounded-lg bg-slate-950 border border-slate-800 text-xs">
+                                <button type="button" onclick="switchMlPlot('cm')" id="tabPlotCm" class="px-3 py-1 rounded-md bg-violet-500/20 text-violet-300 font-semibold border border-violet-500/30 transition-all">Confusion Matrix</button>
+                                <button type="button" onclick="switchMlPlot('fi')" id="tabPlotFi" class="px-3 py-1 rounded-md text-slate-400 hover:text-white transition-all">Feature Importance</button>
+                                <button type="button" onclick="switchMlPlot('mc')" id="tabPlotMc" class="px-3 py-1 rounded-md text-slate-400 hover:text-white transition-all">Model Benchmark</button>
+                            </div>
+                        </div>
+
+                        <!-- Plot Display Frame -->
+                        <div class="w-full rounded-xl bg-slate-950 p-4 border border-slate-800 flex items-center justify-center min-h-[380px]">
+                            <img id="mlPlotDisplay" src="/ml_artifacts/confusion_matrix.png?t=1" alt="Diagnostic Plot" class="max-h-[460px] max-w-full rounded-lg object-contain shadow-2xl">
+                        </div>
+                    </div>
+
+                    <!-- ML Best Practice Architecture Details -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-slate-300">
+                        <div class="bg-slate-900/40 border border-slate-800 rounded-xl p-4 flex flex-col gap-2">
+                            <div class="font-semibold text-white flex items-center gap-1.5">
+                                <i data-lucide="layers" class="w-4 h-4 text-cyan-400"></i>
+                                <span>1. Strict Featurization & No Data Leakage</span>
+                            </div>
+                            <p class="text-slate-400 leading-relaxed text-[11px]">
+                                Preprocessing pipelines (StandardScaler) are fitted strictly on the 80% stratified training split and applied independently to holdout test sets. 5-Fold Stratified Cross-Validation guarantees unbiased variance estimation.
+                            </p>
+                        </div>
+                        <div class="bg-slate-900/40 border border-slate-800 rounded-xl p-4 flex flex-col gap-2">
+                            <div class="font-semibold text-white flex items-center gap-1.5">
+                                <i data-lucide="fingerprint" class="w-4 h-4 text-violet-400"></i>
+                                <span>2. 12 Information-Theoretic Security Features</span>
+                            </div>
+                            <p class="text-slate-400 leading-relaxed text-[11px]">
+                                Features include Shannon Entropy, Chi-Square Uniformity, Horizontal/Vertical/Diagonal Correlations, Local 8x8 Block Diffusion Homogeneity, Gradient Magnitudes, and Inter-Channel Cross-Correlations.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <!-- Toast Notification Container -->
+    <div id="toastContainer" class="fixed bottom-6 right-6 z-50 flex flex-col gap-2 max-w-sm pointer-events-none"></div>
+
+    <!-- Lightbox Modal for Full Image Inspection -->
+    <div id="lightboxModal" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-4 hidden">
+        <div class="relative max-w-4xl max-h-[90vh] flex flex-col items-center">
+            <button onclick="closeLightbox()" class="absolute -top-12 right-0 p-2 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <h4 id="lightboxTitle" class="text-sm font-semibold text-slate-300 mb-3 font-mono">Image Inspection</h4>
+            <img id="lightboxImg" src="" alt="Inspection" class="max-h-[75vh] max-w-full rounded-xl border border-slate-700 shadow-2xl object-contain">
+        </div>
+    </div>
+
+    <!-- Info / How it Works Modal -->
+    <div id="infoModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 hidden">
+        <div class="glass-panel max-w-2xl w-full rounded-2xl p-6 relative flex flex-col gap-4 max-h-[85vh] overflow-y-auto">
+            <button onclick="toggleInfoModal()" class="absolute top-4 right-4 p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition-colors">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center">
+                    <i data-lucide="book-open" class="w-4 h-4"></i>
+                </div>
+                <h3 class="text-lg font-bold text-white">How Chaos-Based Image Encryption Works</h3>
+            </div>
+            <div class="text-sm text-slate-300 space-y-4 leading-relaxed">
+                <p>
+                    Natural images possess strong spatial correlation: adjacent pixels are nearly identical (<code class="font-mono text-cyan-300 text-xs bg-slate-900 px-1.5 py-0.5 rounded">r<sub>xy</sub> &gt; 0.95</code>). Classical block ciphers like ECB leave outlines visible. This system employs a two-stage chaotic dynamical cipher to achieve complete Shannon confusion and diffusion:
+                </p>
+
+                <!-- Stage 1 Card -->
+                <div class="bg-slate-900/90 p-4 rounded-xl border border-cyan-500/30 flex flex-col gap-2">
+                    <div class="flex items-center justify-between text-xs font-semibold text-cyan-400">
+                        <span>STAGE 1: ARNOLD 2D CAT MAP (SPATIAL SCRAMBLING)</span>
+                        <span class="font-mono text-[10px] px-1.5 py-0.5 bg-cyan-500/10 rounded">Confusion</span>
+                    </div>
+                    <div class="font-mono text-xs text-cyan-200 bg-slate-950 p-2.5 rounded-lg border border-slate-800">
+                        x' = (x + y) mod N<br>
+                        y' = (x + 2y) mod N
+                    </div>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        Arnold's Cat Map is an area-preserving chaotic automorphism on the 2-torus. Because its matrix determinant is <code class="font-mono text-slate-300 text-[11px]">(1 × 2) - (1 × 1) = 1</code>, it is strictly invertible and has a positive Lyapunov exponent, shearing adjacent pixel coordinates across the canvas until all spatial correlation collapses to near zero.
+                    </p>
+                </div>
+
+                <!-- Stage 2 Card -->
+                <div class="bg-slate-900/90 p-4 rounded-xl border border-violet-500/30 flex flex-col gap-2">
+                    <div class="flex items-center justify-between text-xs font-semibold text-violet-400">
+                        <span>STAGE 2: LOGISTIC MAP (CHAOTIC PERMUTATION)</span>
+                        <span class="font-mono text-[10px] px-1.5 py-0.5 bg-violet-500/10 rounded">Diffusion</span>
+                    </div>
+                    <div class="font-mono text-xs text-violet-200 bg-slate-950 p-2.5 rounded-lg border border-slate-800">
+                        x<sub>n+1</sub> = r · x<sub>n</sub> · (1 - x<sub>n</sub>), &nbsp; where 3.57 &le; r &le; 4.0
+                    </div>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        In the chaotic regime (<code class="font-mono text-slate-300 text-[11px]">3.57 &le; r &le; 4.0</code>), the non-linear difference equation generates an aperiodic, non-repeating trajectory. An orbit of length <code class="font-mono text-slate-300 text-[11px]">N × N</code> is generated and sorted (<code class="font-mono text-slate-300 text-[11px]">argsort</code>) to produce a pseudo-random 1D index permutation vector, shuffling all pixel positions.
+                    </p>
+                </div>
+
+                <!-- Invertibility Guarantee -->
+                <div class="bg-emerald-500/10 p-3 rounded-xl border border-emerald-500/30 text-xs text-emerald-200 flex items-start gap-2.5">
+                    <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5"></i>
+                    <div>
+                        <strong class="text-white">100% Lossless Decryption:</strong>
+                        Decryption applies the exact reverse operations in opposite order: Inverse Logistic Permutation followed by Inverse Arnold Cat Map, guaranteeing bit-for-bit mathematical identity (<code class="font-mono text-white text-[11px]">PSNR = &infin; dB, MSE = 0</code>).
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Script Logic -->
+    <script>
+        // State variables
+        let currentMode = 'single'; // 'single' or 'batch'
+        let uploadedFilename = null;
+        let encryptedFilename = null;
+        let decryptedFilename = null;
+        let targetDimension = 512;
+        let batchSelectedFiles = [];
+
+        // Global drag prevention so dragging anywhere never opens image in tab
+        window.addEventListener('dragover', (e) => { e.preventDefault(); e.stopPropagation(); });
+        window.addEventListener('drop', (e) => { e.preventDefault(); e.stopPropagation(); });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            setupSyncInputs();
+            setupDropzone();
+            setupBatchDropzone();
+        });
+
+        // Mode switcher
+        function switchMode(mode) {
+            currentMode = mode;
+            const singleTabBtn = document.getElementById('modeSingleBtn');
+            const batchTabBtn = document.getElementById('modeBatchBtn');
+            const mlTabBtn = document.getElementById('modeMlBtn');
+            const singleUpload = document.getElementById('singleUploadPanel');
+            const batchUpload = document.getElementById('batchUploadPanel');
+            const singleActions = document.getElementById('singleActionButtons');
+            const batchActions = document.getElementById('batchActionButtons');
+            const singleView = document.getElementById('singleViewContainer');
+            const batchView = document.getElementById('batchViewContainer');
+            const mlView = document.getElementById('mlBenchmarkContainer');
+
+            // Reset tab styles
+            if (singleTabBtn) singleTabBtn.className = "px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all flex items-center gap-1.5";
+            if (batchTabBtn) batchTabBtn.className = "px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all flex items-center gap-1.5";
+            if (mlTabBtn) mlTabBtn.className = "px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all flex items-center gap-1.5";
+
+            if (mode === 'single') {
+                if (singleTabBtn) singleTabBtn.className = "px-3 py-1.5 rounded-lg bg-cyan-500/20 text-cyan-300 font-semibold border border-cyan-500/30 transition-all flex items-center gap-1.5";
+                singleUpload.classList.remove('hidden');
+                batchUpload.classList.add('hidden');
+                singleActions.classList.remove('hidden');
+                batchActions.classList.add('hidden');
+                singleView.classList.remove('hidden');
+                batchView.classList.add('hidden');
+                if (mlView) mlView.classList.add('hidden');
+            } else if (mode === 'batch') {
+                if (batchTabBtn) batchTabBtn.className = "px-3 py-1.5 rounded-lg bg-emerald-500/20 text-emerald-300 font-semibold border border-emerald-500/30 transition-all flex items-center gap-1.5";
+                batchUpload.classList.remove('hidden');
+                singleUpload.classList.add('hidden');
+                batchActions.classList.remove('hidden');
+                singleActions.classList.add('hidden');
+                batchView.classList.remove('hidden');
+                singleView.classList.add('hidden');
+                if (mlView) mlView.classList.add('hidden');
+            } else if (mode === 'ml') {
+                if (mlTabBtn) mlTabBtn.className = "px-3 py-1.5 rounded-lg bg-violet-500/20 text-violet-300 font-semibold border border-violet-500/30 transition-all flex items-center gap-1.5";
+                singleUpload.classList.remove('hidden');
+                batchUpload.classList.add('hidden');
+                singleActions.classList.remove('hidden');
+                batchActions.classList.add('hidden');
+                singleView.classList.add('hidden');
+                batchView.classList.add('hidden');
+                if (mlView) mlView.classList.remove('hidden');
+            }
+        }
+
+        // Plot Switcher for ML Benchmark Hub
+        function switchMlPlot(type) {
+            const tabCm = document.getElementById('tabPlotCm');
+            const tabFi = document.getElementById('tabPlotFi');
+            const tabMc = document.getElementById('tabPlotMc');
+            const imgDisplay = document.getElementById('mlPlotDisplay');
+
+            [tabCm, tabFi, tabMc].forEach(t => {
+                if (t) t.className = "px-3 py-1 rounded-md text-slate-400 hover:text-white transition-all";
+            });
+
+            const activeClass = "px-3 py-1 rounded-md bg-violet-500/20 text-violet-300 font-semibold border border-violet-500/30 transition-all";
+
+            if (type === 'cm') {
+                if (tabCm) tabCm.className = activeClass;
+                if (imgDisplay) {
+                    imgDisplay.src = `/ml_artifacts/confusion_matrix.png?t=${Date.now()}`;
+                    imgDisplay.alt = "Confusion Matrix";
+                }
+            } else if (type === 'fi') {
+                if (tabFi) tabFi.className = activeClass;
+                if (imgDisplay) {
+                    imgDisplay.src = `/ml_artifacts/feature_importance.png?t=${Date.now()}`;
+                    imgDisplay.alt = "Feature Importance";
+                }
+            } else if (type === 'mc') {
+                if (tabMc) tabMc.className = activeClass;
+                if (imgDisplay) {
+                    imgDisplay.src = `/ml_artifacts/model_comparison.png?t=${Date.now()}`;
+                    imgDisplay.alt = "Model Comparison";
+                }
+            }
+        }
+
+        // Real-Time AI Cryptographic Security Auditor UI updater
+        function updateMlAuditUI(audit) {
+            if (!audit) return;
+
+            const verdictPill = document.getElementById('aiVerdictPill');
+            const verdictDot = document.getElementById('aiVerdictDot');
+            const verdictText = document.getElementById('aiVerdictText');
+            const classNameEl = document.getElementById('aiClassName');
+            const riskTextEl = document.getElementById('aiRiskText');
+            const confPctEl = document.getElementById('aiConfidencePct');
+            const confBarEl = document.getElementById('aiConfidenceBar');
+            const probPlainEl = document.getElementById('aiProbPlain');
+            const probWeakEl = document.getElementById('aiProbWeak');
+            const probStrongEl = document.getElementById('aiProbStrong');
+
+            const confVal = audit.confidence_pct !== undefined ? parseFloat(audit.confidence_pct) : (parseFloat(audit.confidence || 0) * 100);
+            const pct = confVal.toFixed(1);
+            if (confPctEl) confPctEl.textContent = `${pct}%`;
+            if (confBarEl) confBarEl.style.width = `${pct}%`;
+
+            if (classNameEl) classNameEl.textContent = audit.predicted_class || audit.class_name || 'Classified';
+            if (riskTextEl) riskTextEl.textContent = audit.risk_assessment || audit.risk || '';
+
+            const formatProb = (v) => {
+                if (v === undefined || v === null) return '0.0%';
+                const num = parseFloat(v);
+                return (num > 1.0 ? num : num * 100).toFixed(1) + '%';
+            };
+
+            if (audit.probabilities) {
+                if (probPlainEl && audit.probabilities.Plaintext !== undefined) {
+                    probPlainEl.textContent = formatProb(audit.probabilities.Plaintext);
+                }
+                if (probWeakEl && audit.probabilities.Weak_Cipher !== undefined) {
+                    probWeakEl.textContent = formatProb(audit.probabilities.Weak_Cipher);
+                }
+                if (probStrongEl && audit.probabilities.Strong_Chaos !== undefined) {
+                    probStrongEl.textContent = formatProb(audit.probabilities.Strong_Chaos);
+                }
+            }
+
+            const classId = audit.class_id !== undefined ? audit.class_id : audit.class_index;
+            if (verdictPill && verdictDot && verdictText) {
+                if (classId === 0) {
+                    // Plaintext
+                    verdictPill.className = "px-3.5 py-1.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-xs font-semibold text-rose-300 flex items-center gap-2";
+                    verdictDot.className = "w-2.5 h-2.5 rounded-full bg-rose-500 animate-pulse";
+                    verdictText.textContent = "Plaintext (Unencrypted)";
+                    if (confBarEl) confBarEl.className = "bg-rose-500 h-full transition-all duration-500";
+                    if (classNameEl) classNameEl.className = "text-base font-bold text-rose-300 font-mono mt-1";
+                } else if (classId === 1) {
+                    // Weak Cipher
+                    verdictPill.className = "px-3.5 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-xs font-semibold text-amber-300 flex items-center gap-2";
+                    verdictDot.className = "w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse";
+                    verdictText.textContent = "Weak Cipher (Arnold Only)";
+                    if (confBarEl) confBarEl.className = "bg-amber-500 h-full transition-all duration-500";
+                    if (classNameEl) classNameEl.className = "text-base font-bold text-amber-300 font-mono mt-1";
+                } else {
+                    // Strong Chaos
+                    verdictPill.className = "px-3.5 py-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-xs font-semibold text-emerald-300 flex items-center gap-2";
+                    verdictDot.className = "w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse";
+                    verdictText.textContent = "Strong Chaos (Fully Diffused)";
+                    if (confBarEl) confBarEl.className = "bg-emerald-400 h-full transition-all duration-500";
+                    if (classNameEl) classNameEl.className = "text-base font-bold text-emerald-300 font-mono mt-1";
+                }
+            }
+        }
+
+        // Input synchronizers (sliders <-> numeric inputs)
+        function setupSyncInputs() {
+            const iterRange = document.getElementById('iterRange');
+            const iterInput = document.getElementById('iterInput');
+            const iterBadge = document.getElementById('iterBadge');
+            iterRange.addEventListener('input', () => {
+                iterInput.value = iterRange.value;
+                iterBadge.textContent = iterRange.value;
+            });
+            iterInput.addEventListener('input', () => {
+                iterRange.value = iterInput.value;
+                iterBadge.textContent = iterInput.value;
+            });
+
+            const xRange = document.getElementById('xRange');
+            const xInput = document.getElementById('xInput');
+            xRange.addEventListener('input', () => {
+                xInput.value = parseFloat(xRange.value).toFixed(4);
+            });
+            xInput.addEventListener('input', () => {
+                xRange.value = xInput.value;
+            });
+
+            const rRange = document.getElementById('rRange');
+            const rInput = document.getElementById('rInput');
+            rRange.addEventListener('input', () => {
+                rInput.value = parseFloat(rRange.value).toFixed(5);
+            });
+            rInput.addEventListener('input', () => {
+                rRange.value = rInput.value;
+            });
+        }
+
+        // Dimension button selector
+        function setDimension(dim) {
+            targetDimension = dim;
+            document.querySelectorAll('.dim-btn').forEach(btn => {
+                btn.className = "dim-btn px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-400 border border-slate-700";
+            });
+            event.target.className = "dim-btn px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-semibold";
+        }
+
+        // Preset configuration
+        function applyPreset(x, r, k) {
+            document.getElementById('xInput').value = x;
+            document.getElementById('xRange').value = x;
+            document.getElementById('rInput').value = r;
+            document.getElementById('rRange').value = r;
+            document.getElementById('iterInput').value = k;
+            document.getElementById('iterRange').value = k;
+            document.getElementById('iterBadge').textContent = k;
+            showToast(`Preset applied: x₀=${x}, r=${r}, k=${k}`, 'info');
+        }
+
+        // Random chaotic keys
+        function generateRandomKeys() {
+            const randomX = (0.05 + Math.random() * 0.9).toFixed(4);
+            const randomR = (3.85 + Math.random() * 0.149).toFixed(5);
+            const randomK = Math.floor(Math.random() * 4) + 1;
+            applyPreset(randomX, randomR, randomK);
+            showToast('Generated fresh chaotic key parameters', 'info');
+        }
+
+        // Copy parameters to clipboard
+        function copyParameters() {
+            const x = document.getElementById('xInput').value;
+            const r = document.getElementById('rInput').value;
+            const k = document.getElementById('iterInput').value;
+            const text = JSON.stringify({ key_x: parseFloat(x), param_r: parseFloat(r), iterations_k: parseInt(k) }, null, 2);
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('Key parameters copied to clipboard!', 'success');
+            }).catch(() => {
+                showToast('Failed to copy to clipboard', 'error');
+            });
+        }
+
+        // Drag & Drop Handling for Single Mode
+        function setupDropzone() {
+            const dropzone = document.getElementById('dropzone');
+            const fileInput = document.getElementById('fileInput');
+
+            dropzone.addEventListener('click', (e) => {
+                e.stopPropagation();
+                fileInput.click();
+            });
+
+            ['dragenter', 'dragover'].forEach(name => {
+                dropzone.addEventListener(name, (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    dropzone.classList.add('drop-active');
+                });
+            });
+
+            ['dragleave', 'drop'].forEach(name => {
+                dropzone.addEventListener(name, (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    dropzone.classList.remove('drop-active');
+                });
+            });
+
+            dropzone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length) {
+                    handleFileUpload(e.dataTransfer.files[0]);
+                }
+            });
+
+            fileInput.addEventListener('change', (e) => {
+                if (e.target.files && e.target.files.length) {
+                    handleFileUpload(e.target.files[0]);
+                    fileInput.value = ''; // Reset so selecting the same file triggers again
+                }
+            });
+        }
+
+        // File upload worker for Single Image
+        async function handleFileUpload(file) {
+            const formData = new FormData();
+            formData.append('image', file);
+            formData.append('auto_crop', document.getElementById('autoCropToggle').checked);
+            formData.append('target_dim', targetDimension);
+
+            showToast(`Uploading ${file.name}...`, 'info');
+
+            try {
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+
+                if (!response.ok) {
+                    showToast(result.error || 'Failed to upload image', 'error');
+                    return;
+                }
+
+                uploadedFilename = result.filename;
+                encryptedFilename = null;
+                decryptedFilename = null;
+
+                // Update UI previews
+                updateOriginalPreview(uploadedFilename, result);
+                resetEncryptedPreview();
+                resetDecryptedPreview();
+                if (result.ml_audit) updateMlAuditUI(result.ml_audit);
+
+                document.getElementById('encryptBtn').disabled = false;
+                document.getElementById('decryptBtn').disabled = false;
+                document.getElementById('cipherStateBadge').textContent = `Image loaded (${result.width}x${result.height})`;
+                document.getElementById('cipherStateBadge').className = "text-cyan-400 font-medium";
+
+                showToast(`Image loaded: ${result.width}x${result.height} px`, 'success');
+
+            } catch (err) {
+                showToast('Network error during upload', 'error');
+                console.error(err);
+            }
+        }
+
+        // Load 1-Click sample image
+        async function loadSampleImage() {
+            showToast('Loading demo sample image...', 'info');
+            try {
+                const response = await fetch('/sample', { method: 'POST' });
+                const result = await response.json();
+                if (!response.ok) {
+                    showToast(result.error || 'Failed to load sample', 'error');
+                    return;
+                }
+                uploadedFilename = result.filename;
+                encryptedFilename = null;
+                decryptedFilename = null;
+
+                updateOriginalPreview(uploadedFilename, result);
+                resetEncryptedPreview();
+                resetDecryptedPreview();
+                if (result.ml_audit) updateMlAuditUI(result.ml_audit);
+
+                document.getElementById('encryptBtn').disabled = false;
+                document.getElementById('decryptBtn').disabled = false;
+                document.getElementById('cipherStateBadge').textContent = `Sample loaded (${result.width}x${result.height})`;
+                document.getElementById('cipherStateBadge').className = "text-cyan-400 font-medium";
+
+                showToast('Sample image loaded! Ready to encrypt.', 'success');
+            } catch (err) {
+                showToast('Failed to load sample image', 'error');
+            }
+        }
+
+        function updateOriginalPreview(filename, meta) {
+            const img = document.getElementById('origImgPreview');
+            img.src = `/uploads/${filename}?t=${Date.now()}`;
+            img.classList.remove('hidden');
+            document.getElementById('origPlaceholder').classList.add('hidden');
+            document.getElementById('origZoomBtn').classList.remove('hidden');
+
+            document.getElementById('origStatusBadge').textContent = 'Loaded';
+            document.getElementById('origStatusBadge').className = "text-[10px] px-2 py-0.5 rounded bg-slate-800 text-slate-200 font-mono";
+
+            document.getElementById('origDim').textContent = `${meta.width} × ${meta.height}`;
+            if (meta.metrics) {
+                document.getElementById('origEntropy').textContent = `${meta.metrics.entropy.toFixed(4)} bits`;
+                document.getElementById('origCorr').textContent = `${meta.metrics.h_corr.toFixed(4)}`;
+                document.getElementById('metricCorrOrig').textContent = `${meta.metrics.h_corr.toFixed(3)}`;
+
+                // Auto-detect encrypted noise image
+                const quickBtn = document.getElementById('quickDecryptBtn');
+                const origCardLabel = document.getElementById('origCardLabel');
+                const origCardDot = document.getElementById('origCardDot');
+
+                if (Math.abs(meta.metrics.h_corr) < 0.15) {
+                    showToast('Ciphertext detected! Click "Decrypt This Image Now" to restore.', 'info');
+                    document.getElementById('cipherStateBadge').textContent = 'Encrypted Ciphertext Detected -> Ready to Decrypt';
+                    document.getElementById('cipherStateBadge').className = 'text-emerald-400 font-medium';
+                    if (origCardLabel) origCardLabel.textContent = '1. Ciphertext (Noise)';
+                    if (origCardDot) origCardDot.className = 'w-2 h-2 rounded-full bg-emerald-400 animate-pulse';
+                    if (quickBtn) quickBtn.classList.remove('hidden');
+                    document.getElementById('decryptBtn').classList.add('animate-pulse');
+                } else {
+                    if (origCardLabel) origCardLabel.textContent = '1. Plaintext Input';
+                    if (origCardDot) origCardDot.className = 'w-2 h-2 rounded-full bg-slate-400';
+                    if (quickBtn) quickBtn.classList.add('hidden');
+                    document.getElementById('decryptBtn').classList.remove('animate-pulse');
+                }
+            }
+        }
+
+        function resetEncryptedPreview() {
+            document.getElementById('encImgPreview').classList.add('hidden');
+            document.getElementById('encPlaceholder').classList.remove('hidden');
+            document.getElementById('encZoomBtn').classList.add('hidden');
+            document.getElementById('encDownloadLink').classList.add('hidden');
+            document.getElementById('encStatusBadge').textContent = 'Awaiting';
+            document.getElementById('encTime').textContent = '-';
+            document.getElementById('encEntropy').textContent = '-';
+            document.getElementById('encCorr').textContent = '-';
+            document.getElementById('metricCorrEnc').textContent = '--';
+            document.getElementById('metricEntropyEnc').textContent = '--';
+            document.getElementById('corrBar').style.width = '0%';
+            document.getElementById('entropyBar').style.width = '0%';
+        }
+
+        function resetDecryptedPreview() {
+            const decCard = document.getElementById('decCard');
+            if (decCard) {
+                decCard.classList.remove('ring-2', 'ring-emerald-400', 'shadow-2xl', 'shadow-emerald-500/20');
+            }
+            document.getElementById('decImgPreview').classList.add('hidden');
+            document.getElementById('decPlaceholder').classList.remove('hidden');
+            document.getElementById('decZoomBtn').classList.add('hidden');
+            document.getElementById('decDownloadLink').classList.add('hidden');
+            document.getElementById('decStatusBadge').textContent = 'Awaiting';
+            document.getElementById('decTime').textContent = '-';
+            document.getElementById('decIntegrity').textContent = '-';
+            document.getElementById('decPsnr').textContent = '-';
+            document.getElementById('metricIntegrity').textContent = '--';
+            document.getElementById('integrityBar').style.width = '0%';
+            document.getElementById('metricPsnr').textContent = '--';
+        }
+
+        // Encryption execution
+        async function runEncryption() {
+            if (!uploadedFilename) {
+                showToast('Please upload or select an image first', 'error');
+                return;
+            }
+
+            const x = parseFloat(document.getElementById('xInput').value);
+            const r = parseFloat(document.getElementById('rInput').value);
+            const iterations = parseInt(document.getElementById('iterInput').value);
+
+            if (isNaN(x) || x <= 0 || x >= 1) {
+                showToast('Key x₀ must be strictly between 0 and 1', 'error');
+                return;
+            }
+            if (isNaN(r) || r < 3.57 || r > 4.0) {
+                showToast('Parameter r must be between 3.57 and 4.0 for chaos', 'error');
+                return;
+            }
+
+            document.getElementById('encSpinner').classList.remove('hidden');
+            document.getElementById('encryptBtn').disabled = true;
+
+            try {
+                const response = await fetch('/encrypt', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        filename: uploadedFilename,
+                        x: x,
+                        r: r,
+                        iterations: iterations
+                    })
+                });
+
+                const result = await response.json();
+                document.getElementById('encSpinner').classList.add('hidden');
+                document.getElementById('encryptBtn').disabled = false;
+
+                if (!response.ok) {
+                    showToast(result.error || 'Encryption failed', 'error');
+                    return;
+                }
+
+                encryptedFilename = result.encrypted_image;
+
+                // Update Encrypted Preview Card
+                const encImg = document.getElementById('encImgPreview');
+                encImg.src = `/encrypted/${encryptedFilename}?t=${Date.now()}`;
+                encImg.classList.remove('hidden');
+                document.getElementById('encPlaceholder').classList.add('hidden');
+                document.getElementById('encZoomBtn').classList.remove('hidden');
+
+                const dlLink = document.getElementById('encDownloadLink');
+                dlLink.href = `/encrypted/${encryptedFilename}`;
+                dlLink.download = encryptedFilename;
+                dlLink.classList.remove('hidden');
+
+                document.getElementById('encStatusBadge').textContent = `Encrypted in ${result.duration_ms}ms`;
+                document.getElementById('encStatusBadge').className = "text-[10px] px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 font-mono";
+
+                document.getElementById('encTime').textContent = `${result.duration_ms} ms`;
+                if (result.metrics) {
+                    document.getElementById('encEntropy').textContent = `${result.metrics.entropy.toFixed(4)} bits`;
+                    document.getElementById('encCorr').textContent = `${result.metrics.h_corr.toFixed(4)}`;
+
+                    document.getElementById('metricCorrEnc').textContent = `${result.metrics.h_corr.toFixed(4)}`;
+                    document.getElementById('metricEntropyEnc').textContent = `${result.metrics.entropy.toFixed(4)}`;
+
+                    const corrPercent = Math.max(0, Math.min(100, (1 - Math.abs(result.metrics.h_corr)) * 100));
+                    document.getElementById('corrBar').style.width = `${corrPercent}%`;
+
+                    const entropyPercent = Math.max(0, Math.min(100, (result.metrics.entropy / 8.0) * 100));
+                    document.getElementById('entropyBar').style.width = `${entropyPercent}%`;
+                }
+
+                if (result.ml_audit) updateMlAuditUI(result.ml_audit);
+
+                document.getElementById('decryptBtn').disabled = false;
+                document.getElementById('cipherStateBadge').textContent = `Encrypted cleanly (${iterations}x rounds)`;
+                document.getElementById('cipherStateBadge').className = "text-violet-400 font-medium";
+
+                showToast(`Encryption complete in ${result.duration_ms}ms!`, 'success');
+
+            } catch (err) {
+                document.getElementById('encSpinner').classList.add('hidden');
+                document.getElementById('encryptBtn').disabled = false;
+                showToast('Encryption encountered an error', 'error');
+                console.error(err);
+            }
+        }
+
+        // Decryption execution
+        async function runDecryption() {
+            const targetEncryptedFile = encryptedFilename || uploadedFilename;
+            if (!targetEncryptedFile) {
+                showToast('Please upload or encrypt an image first', 'error');
+                return;
+            }
+
+            const x = parseFloat(document.getElementById('xInput').value);
+            const r = parseFloat(document.getElementById('rInput').value);
+            const iterations = parseInt(document.getElementById('iterInput').value);
+
+            document.getElementById('decSpinner').classList.remove('hidden');
+            document.getElementById('decryptBtn').disabled = true;
+
+            try {
+                const response = await fetch('/decrypt', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        encrypted_filename: targetEncryptedFile,
+                        original_filename: encryptedFilename ? uploadedFilename : null,
+                        x: x,
+                        r: r,
+                        iterations: iterations
+                    })
+                });
+
+                const result = await response.json();
+                document.getElementById('decSpinner').classList.add('hidden');
+                document.getElementById('decryptBtn').disabled = false;
+
+                if (!response.ok) {
+                    showToast(result.error || 'Decryption failed', 'error');
+                    return;
+                }
+
+                decryptedFilename = result.decrypted_image;
+
+                // Update Decrypted Preview Card
+                const decImg = document.getElementById('decImgPreview');
+                decImg.src = `/decrypted/${decryptedFilename}?t=${Date.now()}`;
+                decImg.classList.remove('hidden');
+                document.getElementById('decPlaceholder').classList.add('hidden');
+                document.getElementById('decZoomBtn').classList.remove('hidden');
+
+                // Glow effect on decCard
+                const decCard = document.getElementById('decCard');
+                if (decCard) {
+                    decCard.classList.add('ring-2', 'ring-emerald-400', 'shadow-2xl', 'shadow-emerald-500/20');
+                    decCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+                document.getElementById('decryptBtn').classList.remove('animate-pulse');
+                const quickBtn = document.getElementById('quickDecryptBtn');
+                if (quickBtn) quickBtn.classList.add('hidden');
+
+                const dlLink = document.getElementById('decDownloadLink');
+                dlLink.href = `/decrypted/${decryptedFilename}`;
+                dlLink.download = decryptedFilename;
+                dlLink.classList.remove('hidden');
+
+                document.getElementById('decStatusBadge').textContent = `Decrypted in ${result.duration_ms}ms`;
+                document.getElementById('decStatusBadge').className = "text-[10px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-mono";
+
+                document.getElementById('decTime').textContent = `${result.duration_ms} ms`;
+
+                // Verification and metrics
+                if (result.integrity && result.integrity.verified) {
+                    if (result.integrity.match) {
+                        document.getElementById('decIntegrity').textContent = '100% Bitwise Exact';
+                        document.getElementById('decIntegrity').className = 'font-mono text-emerald-400 font-semibold';
+                        document.getElementById('decPsnr').textContent = 'PSNR: ∞ dB (MSE: 0)';
+                        document.getElementById('metricIntegrity').textContent = '100% Match';
+                        document.getElementById('integrityBar').style.width = '100%';
+                        document.getElementById('metricPsnr').textContent = '∞ dB';
+                    } else {
+                        document.getElementById('decIntegrity').textContent = 'Restored';
+                        document.getElementById('decPsnr').textContent = `MSE: ${result.integrity.mse || 0}`;
+                        document.getElementById('metricIntegrity').textContent = 'Decrypted';
+                        document.getElementById('integrityBar').style.width = '80%';
+                        document.getElementById('metricPsnr').textContent = `${result.integrity.psnr || 'Verified'} dB`;
+                    }
+                } else {
+                    document.getElementById('decIntegrity').textContent = 'Restored';
+                    document.getElementById('decPsnr').textContent = 'Verified';
+                    document.getElementById('metricIntegrity').textContent = 'Restored';
+                    document.getElementById('integrityBar').style.width = '100%';
+                }
+
+                document.getElementById('cipherStateBadge').textContent = `Decrypted cleanly in ${result.duration_ms}ms`;
+                document.getElementById('cipherStateBadge').className = "text-emerald-400 font-medium";
+
+                if (result.ml_audit) updateMlAuditUI(result.ml_audit);
+
+                showToast(`Decryption complete in ${result.duration_ms}ms!`, 'success');
+
+            } catch (err) {
+                document.getElementById('decSpinner').classList.add('hidden');
+                document.getElementById('decryptBtn').disabled = false;
+                showToast('Decryption encountered an error', 'error');
+                console.error(err);
+            }
+        }
+
+        // ==========================
+        // BATCH FOLDER DECRYPT LOGIC
+        // ==========================
+        function setupBatchDropzone() {
+            const batchDropzone = document.getElementById('batchDropzone');
+            const folderInput = document.getElementById('folderInput');
+            const multiFileInput = document.getElementById('multiFileInput');
+
+            batchDropzone.addEventListener('click', (e) => {
+                e.stopPropagation();
+                folderInput.click();
+            });
+
+            ['dragenter', 'dragover'].forEach(name => {
+                batchDropzone.addEventListener(name, (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    batchDropzone.classList.add('drop-active');
+                });
+            });
+
+            ['dragleave', 'drop'].forEach(name => {
+                batchDropzone.addEventListener(name, (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    batchDropzone.classList.remove('drop-active');
+                });
+            });
+
+            batchDropzone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length) {
+                    handleBatchFilesSelection(e.dataTransfer.files);
+                }
+            });
+
+            folderInput.addEventListener('change', (e) => {
+                if (e.target.files && e.target.files.length) {
+                    handleBatchFilesSelection(e.target.files);
+                }
+            });
+
+            multiFileInput.addEventListener('change', (e) => {
+                if (e.target.files && e.target.files.length) {
+                    handleBatchFilesSelection(e.target.files);
+                }
+            });
+        }
+
+        function handleBatchFilesSelection(fileList) {
+            batchSelectedFiles = [];
+            const allowed = ['png', 'jpg', 'jpeg', 'bmp', 'webp', 'tiff'];
+            for (let i = 0; i < fileList.length; i++) {
+                const f = fileList[i];
+                const ext = f.name.split('.').pop().toLowerCase();
+                if (allowed.includes(ext)) {
+                    batchSelectedFiles.push(f);
+                }
+            }
+
+            const badge = document.getElementById('batchCountBadge');
+            const btnEnc = document.getElementById('batchEncryptBtn');
+            const btnDec = document.getElementById('batchDecryptBtn');
+            const progressText = document.getElementById('batchProgressText');
+
+            if (batchSelectedFiles.length === 0) {
+                badge.textContent = '0 files';
+                if (btnEnc) btnEnc.disabled = true;
+                if (btnDec) btnDec.disabled = true;
+                progressText.textContent = 'No supported images found in selected folder.';
+                showToast('No image files detected in selection', 'error');
+                return;
+            }
+
+            badge.textContent = `${batchSelectedFiles.length} images`;
+            if (btnEnc) btnEnc.disabled = false;
+            if (btnDec) btnDec.disabled = false;
+            progressText.textContent = `Ready: ${batchSelectedFiles.length} photos selected. Choose Encrypt or Decrypt below.`;
+            document.getElementById('batchProgressBar').style.width = '0%';
+            document.getElementById('batchZipDownloadLink').classList.add('hidden');
+
+            showToast(`Selected ${batchSelectedFiles.length} images for batch processing`, 'info');
+        }
+
+        async function runBatchEncrypt() {
+            if (!batchSelectedFiles || batchSelectedFiles.length === 0) {
+                showToast('Please select a folder or images first', 'error');
+                return;
+            }
+
+            const x = parseFloat(document.getElementById('xInput').value);
+            const r = parseFloat(document.getElementById('rInput').value);
+            const k = parseInt(document.getElementById('iterInput').value);
+
+            const btnEnc = document.getElementById('batchEncryptBtn');
+            const btnDec = document.getElementById('batchDecryptBtn');
+            const progressText = document.getElementById('batchProgressText');
+            const progressBar = document.getElementById('batchProgressBar');
+            const timeText = document.getElementById('batchTimeText');
+
+            if (btnEnc) btnEnc.disabled = true;
+            if (btnDec) btnDec.disabled = true;
+            progressText.textContent = `Encrypting ${batchSelectedFiles.length} photos and assembling ZIP...`;
+            progressBar.style.width = '60%';
+            timeText.textContent = 'Processing...';
+
+            const formData = new FormData();
+            for (let i = 0; i < batchSelectedFiles.length; i++) {
+                formData.append('images', batchSelectedFiles[i]);
+            }
+            formData.append('x', x);
+            formData.append('r', r);
+            formData.append('iterations', k);
+
+            try {
+                const response = await fetch('/batch_encrypt', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+
+                if (btnEnc) btnEnc.disabled = false;
+                if (btnDec) btnDec.disabled = false;
+
+                if (!response.ok) {
+                    progressText.textContent = 'Batch encryption failed.';
+                    progressBar.style.width = '0%';
+                    showToast(result.error || 'Failed to process batch', 'error');
+                    return;
+                }
+
+                progressBar.style.width = '100%';
+                progressText.textContent = `Completed! ${result.count} images encrypted.`;
+                timeText.textContent = `${result.duration_ms} ms`;
+
+                // Show Download ZIP button
+                const zipBtn = document.getElementById('batchZipDownloadLink');
+                zipBtn.href = result.download_url;
+                zipBtn.download = result.zip_filename;
+                zipBtn.innerHTML = '<i data-lucide="download-cloud" class="w-4 h-4"></i><span>Download Encrypted ZIP Bundle</span>';
+                zipBtn.classList.remove('hidden');
+                lucide.createIcons({ root: zipBtn });
+
+                // Render gallery of encrypted images
+                renderBatchGallery(result.items, 'Encrypted');
+
+                // Auto-trigger ZIP download
+                showToast(`Success! ${result.count} photos encrypted in ${result.duration_ms}ms`, 'success');
+                const autoDownloadLink = document.createElement('a');
+                autoDownloadLink.href = result.download_url;
+                autoDownloadLink.download = result.zip_filename;
+                document.body.appendChild(autoDownloadLink);
+                autoDownloadLink.click();
+                autoDownloadLink.remove();
+
+            } catch (err) {
+                if (btnEnc) btnEnc.disabled = false;
+                if (btnDec) btnDec.disabled = false;
+                progressText.textContent = 'Error during batch encryption.';
+                progressBar.style.width = '0%';
+                showToast('Network error during batch encryption', 'error');
+                console.error(err);
+            }
+        }
+
+        async function runBatchDecrypt() {
+            if (!batchSelectedFiles || batchSelectedFiles.length === 0) {
+                showToast('Please select a folder or images first', 'error');
+                return;
+            }
+
+            const x = parseFloat(document.getElementById('xInput').value);
+            const r = parseFloat(document.getElementById('rInput').value);
+            const k = parseInt(document.getElementById('iterInput').value);
+
+            const btnEnc = document.getElementById('batchEncryptBtn');
+            const btnDec = document.getElementById('batchDecryptBtn');
+            const progressText = document.getElementById('batchProgressText');
+            const progressBar = document.getElementById('batchProgressBar');
+            const timeText = document.getElementById('batchTimeText');
+
+            if (btnEnc) btnEnc.disabled = true;
+            if (btnDec) btnDec.disabled = true;
+            progressText.textContent = `Decrypting ${batchSelectedFiles.length} images and assembling ZIP...`;
+            progressBar.style.width = '60%';
+            timeText.textContent = 'Processing...';
+
+            const formData = new FormData();
+            for (let i = 0; i < batchSelectedFiles.length; i++) {
+                formData.append('images', batchSelectedFiles[i]);
+            }
+            formData.append('x', x);
+            formData.append('r', r);
+            formData.append('iterations', k);
+
+            try {
+                const response = await fetch('/batch_decrypt', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+
+                if (btnEnc) btnEnc.disabled = false;
+                if (btnDec) btnDec.disabled = false;
+
+                if (!response.ok) {
+                    progressText.textContent = 'Batch decryption failed.';
+                    progressBar.style.width = '0%';
+                    showToast(result.error || 'Failed to process batch', 'error');
+                    return;
+                }
+
+                progressBar.style.width = '100%';
+                progressText.textContent = `Completed! ${result.count} images decrypted.`;
+                timeText.textContent = `${result.duration_ms} ms`;
+
+                // Show Download ZIP button
+                const zipBtn = document.getElementById('batchZipDownloadLink');
+                zipBtn.href = result.download_url;
+                zipBtn.download = result.zip_filename;
+                zipBtn.innerHTML = '<i data-lucide="download-cloud" class="w-4 h-4"></i><span>Download Decrypted ZIP Bundle</span>';
+                zipBtn.classList.remove('hidden');
+                lucide.createIcons({ root: zipBtn });
+
+                // Render gallery of decrypted images
+                renderBatchGallery(result.items, 'Decrypted');
+
+                // Auto-trigger ZIP download
+                showToast(`Success! ${result.count} photos decrypted in ${result.duration_ms}ms`, 'success');
+                const autoDownloadLink = document.createElement('a');
+                autoDownloadLink.href = result.download_url;
+                autoDownloadLink.download = result.zip_filename;
+                document.body.appendChild(autoDownloadLink);
+                autoDownloadLink.click();
+                autoDownloadLink.remove();
+
+            } catch (err) {
+                if (btnEnc) btnEnc.disabled = false;
+                if (btnDec) btnDec.disabled = false;
+                progressText.textContent = 'Error during batch decryption.';
+                progressBar.style.width = '0%';
+                showToast('Network error during batch decryption', 'error');
+                console.error(err);
+            }
+        }
+
+        function renderBatchGallery(items, label = 'Processed') {
+            const gallery = document.getElementById('batchGallery');
+            gallery.innerHTML = '';
+
+            items.forEach((item, index) => {
+                const card = document.createElement('div');
+                const displayName = item.processed || item.decrypted || item.original;
+                card.className = 'glass-panel rounded-xl p-2.5 flex flex-col gap-2 group hover:border-emerald-500/40 transition-all';
+                card.innerHTML = `
+                    <div class="aspect-square w-full rounded-lg bg-slate-900 border border-slate-800 overflow-hidden relative">
+                        <img src="${item.preview_url}?t=${Date.now()}" alt="${displayName}" class="w-full h-full object-contain">
+                        <a href="${item.preview_url}" download="${displayName}" class="absolute inset-0 bg-slate-950/70 backdrop-blur-sm opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity text-white text-[11px] font-medium gap-1">
+                            <i data-lucide="download" class="w-3.5 h-3.5"></i> Download
+                        </a>
+                    </div>
+                    <div class="flex items-center justify-between text-[10px] font-mono text-slate-400">
+                        <span class="truncate" title="${displayName}">${displayName}</span>
+                        <span class="text-emerald-400 text-[9px] px-1 py-0.2 rounded bg-slate-800 shrink-0">${label}</span>
+                    </div>
+                `;
+                gallery.appendChild(card);
+            });
+            lucide.createIcons({ root: gallery });
+        }
+
+        // Lightbox Modal functions
+        function openLightbox(imgId, title) {
+            const srcImg = document.getElementById(imgId);
+            if (!srcImg || !srcImg.src) return;
+            document.getElementById('lightboxImg').src = srcImg.src;
+            document.getElementById('lightboxTitle').textContent = title;
+            document.getElementById('lightboxModal').classList.remove('hidden');
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightboxModal').classList.add('hidden');
+        }
+
+        function toggleInfoModal() {
+            const modal = document.getElementById('infoModal');
+            modal.classList.toggle('hidden');
+            if (!modal.classList.contains('hidden')) {
+                lucide.createIcons({ root: modal });
+            }
+        }
+
+        // Toast notifications system
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+
+            let iconName = 'info';
+            let borderClass = 'border-cyan-500/40 text-cyan-200';
+            let bgClass = 'bg-slate-900/95';
+
+            if (type === 'success') {
+                iconName = 'check-circle';
+                borderClass = 'border-emerald-500/40 text-emerald-200';
+            } else if (type === 'error') {
+                iconName = 'alert-triangle';
+                borderClass = 'border-rose-500/40 text-rose-200';
+            }
+
+            toast.className = `glass-panel pointer-events-auto rounded-xl px-4 py-3 text-xs flex items-center gap-3 border shadow-xl transition-all duration-300 transform translate-y-4 opacity-0 ${borderClass} ${bgClass}`;
+            toast.innerHTML = `
+                <i data-lucide="${iconName}" class="w-4 h-4 shrink-0"></i>
+                <span class="font-medium">${message}</span>
+            `;
+
+            container.appendChild(toast);
+            lucide.createIcons({ root: toast });
+
+            requestAnimationFrame(() => {
+                toast.classList.remove('translate-y-4', 'opacity-0');
+            });
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+    </script>
+</body>
+</html>

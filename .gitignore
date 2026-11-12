@@ -1,0 +1,39 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+env/
+venv/
+.venv/
+ENV/
+
+# macOS system files
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Runtime session outputs and uploads (directory structure preserved via .gitkeep)
+uploads/*
+!uploads/.gitkeep
+encrypted/*
+!encrypted/.gitkeep
+decrypted/*
+!decrypted/.gitkeep
+
+# Temporary test artifact images
+test_decrypted_user_img.png
+decrypted_image_gui.png
+encrypted_image_gui.png
+
+# IDE & Editor caches
+.vscode/
+.idea/
+*.swp
+*.swo
